@@ -1,14 +1,14 @@
 # PaypalAndroid
 
 
-![alt text](https://github.com/datanapps/CachingWithRetrofit/blob/master/screens/device-2020-07-04-214251.png)
+![alt text](https://github.com/datanapps/PaypalAndroid/screens/device-2020-07-04-214251.png)
 
 
 
 ![alt text](https://github.com/datanapps/CachingWithRetrofit/blob/master/screens/device-2020-07-04-214311.png)
 
 
- [![See](https://datanapps.com/public/dnarestapi/buy/buy_coffee6.png)](https://www.paypal.me/datanappspaynow)
+ [![See](https://datanapps.com/public/dnarestapi/buy/buy_coffee2.png)](https://www.paypal.me/datanappspaynow)
 
   ### License
 
