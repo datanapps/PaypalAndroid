@@ -5,7 +5,7 @@
 <img src="https://github.com/datanapps/PaypalAndroid/blob/master/screens/device-2020-07-04-214327.png" height="500" width="250"> <img src="https://github.com/datanapps/PaypalAndroid/blob/master/screens/device-2020-07-04-214311.png" height="500" width="250"> <img src="https://github.com/datanapps/PaypalAndroid/blob/master/screens/device-2020-07-04-214327.png" height="500" width="250"> 
 
 
- [![See](https://datanapps.com/public/dnarestapi/buy/buy_coffee2.png)](https://www.paypal.me/datanappspaynow)
+ [![See](https://datanapps.com/public/dnarestapi/buy/buy_coffee3.png)](https://www.paypal.me/datanappspaynow)
 
   ### License
 
