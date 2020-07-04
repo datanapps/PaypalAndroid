@@ -1,7 +1,7 @@
 # PaypalAndroid
 
 
-![alt text](https://github.com/datanapps/PaypalAndroid/screens/device-2020-07-04-214251.png)
+![alt text](https://github.com/datanapps/PaypalAndroid/blob/master/screens/device-2020-07-04-214327.png)
 
 
 
