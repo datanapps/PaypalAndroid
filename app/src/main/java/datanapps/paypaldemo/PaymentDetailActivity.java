@@ -25,7 +25,7 @@ public class PaymentDetailActivity extends AppCompatActivity {
 
         try {
             JSONObject jsonObject = new JSONObject(intent.getStringExtra("PaymentDetails"));
-            showDetails(jsonObject.getJSONObject("response"),intent.getStringExtra("PaymentAmount"));
+            showDetails(jsonObject.getJSONObject("response"), intent.getStringExtra("PaymentAmount"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -33,8 +33,10 @@ public class PaymentDetailActivity extends AppCompatActivity {
 
     private void showDetails(JSONObject response, String paymentAmount) {
         try {
+
+            JSONObject clientResponse = response.getJSONObject("client");
             txtId.setText(response.getString("id"));
-            txtStatus.setText(response.getString("state"));
+            txtStatus.setText(response.getString("state")+" --------- "+clientResponse.getString("environment"));
             txtAmount.setText("$"+paymentAmount);
         } catch (JSONException e) {
             e.printStackTrace();
