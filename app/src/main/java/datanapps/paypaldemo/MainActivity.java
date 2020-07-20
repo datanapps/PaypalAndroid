@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 if (confirmation != null){
                     try {
                         String paymentDetails = confirmation.toJSONObject().toString(4);
-                        startActivity(new Intent(this,PaymentDetails.class)
-                        .putExtra("Payment Details",paymentDetails)
+                        startActivity(new Intent(this, PaymentDetailActivity.class)
+                        .putExtra("PaymentDetails", paymentDetails)
                         .putExtra("Amount",amount));
                     } catch (JSONException e){
                         e.printStackTrace();

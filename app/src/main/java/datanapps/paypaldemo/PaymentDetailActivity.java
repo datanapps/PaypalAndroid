@@ -9,7 +9,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PaymentDetails extends AppCompatActivity {
+public class PaymentDetailActivity extends AppCompatActivity {
     TextView txtId,txtAmount,txtStatus;
 
     @Override
