@@ -2,9 +2,10 @@ package datanapps.paypal.refund.networkservices.apiservices;
 
 import java.util.Map;
 
-import datanapps.paypal.refund.networkservices.models.APIAccessToken;
-import datanapps.paypal.refund.networkservices.models.refund.APIRefund;
-import datanapps.paypal.refund.networkservices.models.transactions.APITransaction;
+
+import datanapps.paypal.refund.models.APIAccessToken;
+import datanapps.paypal.refund.models.refund.APIRefund;
+import datanapps.paypal.refund.models.transactions.APITransaction;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;

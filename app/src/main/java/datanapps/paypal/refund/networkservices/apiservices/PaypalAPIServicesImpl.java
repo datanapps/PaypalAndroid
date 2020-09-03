@@ -3,9 +3,13 @@ package datanapps.paypal.refund.networkservices.apiservices;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import datanapps.paypal.refund.models.refund.APIRefunded;
 import datanapps.paypal.refund.networkservices.retrofit.NetworkClient;
 import datanapps.paypal.refund.networkservices.retrofit.RetrofitEventListener;
 import retrofit2.Call;
@@ -15,7 +19,6 @@ import retrofit2.Retrofit;
 
 
 public class PaypalAPIServicesImpl {
-
     // static variable single_instance of type Singleton
     private static PaypalAPIServicesImpl paypalAPIServices = null;
 
@@ -27,11 +30,8 @@ public class PaypalAPIServicesImpl {
     public static PaypalAPIServicesImpl getInstance() {
         if (paypalAPIServices == null)
             paypalAPIServices = new PaypalAPIServicesImpl();
-    return paypalAPIServices;
+        return paypalAPIServices;
     }
-
-
-
 
     public void getAccessToken(final RetrofitEventListener retrofitEventListener) {
 
@@ -71,9 +71,12 @@ public class PaypalAPIServicesImpl {
         accessToken.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.d("asd", "Server Responce : " + response.body().toString());
+                //Log.d("asd", "Server Responce : " + response.body().toString());
                 if (response.body() != null) {
                     retrofitEventListener.onSuccess(call, response.body());
+                }
+                else{
+                    retrofitEventListener.onError(call, new Throwable());
                 }
             }
 
@@ -90,7 +93,6 @@ public class PaypalAPIServicesImpl {
         Retrofit retrofit = NetworkClient.getRetrofitClient();
         PayPalAPIServices apiServices = retrofit.create(PayPalAPIServices.class);
 
-
         Call accessToken = apiServices.callRefundAPI(transactionId);
         accessToken.enqueue(new Callback<Object>() {
             @Override
@@ -100,6 +102,21 @@ public class PaypalAPIServicesImpl {
                     Log.d("asd", "Server Responce : " + response.body().toString());
                     retrofitEventListener.onSuccess(call, response.body());
                 }
+                else if (response.code() == 400 || response.code() == 404) {
+                    try {
+
+                        Gson gson = new GsonBuilder().create();
+                        APIRefunded apiRefunded = gson.fromJson(response.errorBody().string(),APIRefunded.class);
+                        retrofitEventListener.onSuccess(call, apiRefunded);
+
+                        } catch (Exception e) {
+                        retrofitEventListener.onError(call, new Throwable());
+                    }
+                }
+                else {
+                    retrofitEventListener.onError(call, new Throwable());
+                }
+
             }
 
             @Override

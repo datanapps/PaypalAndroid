@@ -2,6 +2,7 @@ package datanapps.paypal.refund;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -11,10 +12,12 @@ import com.paypal.android.sdk.payments.PaymentActivity;
 
 import java.math.BigDecimal;
 
+import datanapps.paypal.config.PaypalConfig;
+import datanapps.paypal.refund.models.APIAccessToken;
+import datanapps.paypal.refund.models.refund.APIRefund;
+import datanapps.paypal.refund.models.transactions.APITransaction;
 import datanapps.paypal.refund.networkservices.apiservices.PaypalAPIServicesImpl;
-import datanapps.paypal.refund.networkservices.models.APIAccessToken;
-import datanapps.paypal.refund.networkservices.models.refund.APIRefund;
-import datanapps.paypal.refund.networkservices.models.transactions.APITransaction;
+
 import datanapps.paypal.refund.networkservices.retrofit.RetrofitEventListener;
 import retrofit2.Call;
 
@@ -91,6 +94,12 @@ public class PayPalImplementation {
         activity.startActivityForResult(intent, requestCode);
     }
 
+
+    /*
+    *
+    * Get Access Token
+    * */
+
     public void getAccessToken(String paypalOrderId) {
 
         if(activity==null){
@@ -123,13 +132,18 @@ public class PayPalImplementation {
         });
     }
 
+
+    /*
+    *
+    * Get transaction detail
+    * */
+
     public void getTransactionId(String paypalOrderId) {
 
         if(activity==null){
             Log.d("asd", "Context can not be null");
             return;
         }
-
 
         if(paypalOrderId==null){
             Log.d("asd", "Paypal order id can not be null");
@@ -159,7 +173,10 @@ public class PayPalImplementation {
     }
 
 
-
+/*
+*
+* Call refund API
+* */
     public void callRefundAPI(String transactionId) {
 
         if(activity==null){
@@ -182,16 +199,27 @@ public class PayPalImplementation {
             public void onSuccess(Call call, Object response) {
                 if (response instanceof APIRefund) {
                     Log.d("asd", "Transaction Id : ");
+
+                   // Bundle bundle =  new Bundle();
+                    Intent intent = activity.getIntent();
+                    intent.putExtra(PaypalConfig.PAYPAL_REFUND_DATA, (APIRefund)response);
+
+                    activity.startActivityForResult(intent, PaypalConfig.PAYPAL_REFUND_REQUEST_CODE);
                 }
             }
 
             @Override
             public void onError(Call call, Throwable t) {
-
+                Log.d("asd", t.getMessage()+"");
             }
         });
     }
 
+
+    /*
+    *
+    * Call transaction and Refund API
+    * */
 
     public void callTransactionDetailAndRefund(String paypalOrderId) {
 
@@ -223,7 +251,7 @@ public class PayPalImplementation {
 
             @Override
             public void onError(Call call, Throwable t) {
-
+                Log.d("asd", t.getMessage()+"");
             }
         });
     }

@@ -20,7 +20,7 @@ public class BasicAuthInterceptor implements Interceptor {
         this.secretKey=secretKey;
     }
 
-    String credentials = Credentials.basic(PaypalConfig.PAYPAL_CLIENT_ID, PaypalConfig.PAYPAL_CLIENT_SECRET);
+    String credentials = Credentials.basic(clientKey, secretKey);
 
     @Override
     public Response intercept(Chain chain) throws IOException {

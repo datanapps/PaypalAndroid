@@ -19,6 +19,7 @@ import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import java.math.BigDecimal;
 
+import datanapps.paypal.config.Currency;
 import datanapps.paypal.config.PaypalConfig;
 import datanapps.paypal.R;
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViewStuff() {
         edtAmount = findViewById(R.id.edtAmount);
-        tvResponse = findViewById(R.id.tvRespnse);
+        tvResponse = findViewById(R.id.tvPaymentRespnse);
 
         findViewById(R.id.btnPayNow).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         String amount = edtAmount.getText().toString();
 
-        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(amount), "USD",
+        PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(amount), Currency.USD.toString(),
                 "Purchase Goods", PayPalPayment.PAYMENT_INTENT_SALE);
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
