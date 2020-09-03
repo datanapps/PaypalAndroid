@@ -26,7 +26,7 @@ import datanapps.paypal.refund.models.refund.APIRefunded;
 public class PayPalActivity extends AppCompatActivity implements ResponseListener {
 
 
-    private String paypalOrderId = "PAY-3WR1697469021512XL5II2DA"; //
+    private String paypalOrderId = ""; //"PAY-3WR1697469021512XL5II2DA"
     private TextView tvPaymentResponse;
     private TextView tvRefundResponse;
     private PayPalImplementation payPalImplementation;
@@ -64,7 +64,12 @@ public class PayPalActivity extends AppCompatActivity implements ResponseListene
             @Override
             public void onClick(View view) {
                 //paypalOrderId = "PAY-1F623014M8948101BL5IHMRI";
-                payPalImplementation.callTransactionDetailAndRefund(paypalOrderId);
+                if(paypalOrderId.isEmpty()){
+                    Toast.makeText(PayPalActivity.this, "Please purchase item first", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    payPalImplementation.callTransactionDetailAndRefund(paypalOrderId);
+                }
             }
         });
     }
