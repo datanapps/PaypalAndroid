@@ -1,8 +1,7 @@
-package datanapps.paypal.refund;
+package datanapps.paypal;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -15,37 +14,37 @@ import java.math.BigDecimal;
 import datanapps.paypal.config.PaypalConfig;
 import datanapps.paypal.refund.models.APIAccessToken;
 import datanapps.paypal.refund.models.refund.APIRefund;
+import datanapps.paypal.refund.models.refund.APIRefunded;
 import datanapps.paypal.refund.models.transactions.APITransaction;
 import datanapps.paypal.refund.networkservices.apiservices.PaypalAPIServicesImpl;
-
 import datanapps.paypal.refund.networkservices.retrofit.RetrofitEventListener;
 import retrofit2.Call;
 
 public class PayPalImplementation {
 
 
-    public static  String clientKey;
+    public static String clientKey;
     public static String clientSecret;
 
     private Activity activity;
 
     private boolean isLiveEnvironment;
+    private ResponseListener responseListener;
 
 
-    public void initialise(Activity context, String clientKey, String clientSecret, boolean isLiveEnvironment){
+    public void initialise(Activity context, String clientKey, String clientSecret, boolean isLiveEnvironment, ResponseListener responseListener) {
 
         this.activity = context;
         this.clientKey = clientKey;
         this.clientSecret = clientSecret;
-
+        this.responseListener = responseListener;
 
         initPaypal(isLiveEnvironment);
 
     }
 
 
-
-    public PayPalConfiguration getEnviorment(){
+    public PayPalConfiguration getEnviorment() {
 
 
         PayPalConfiguration configSand = new PayPalConfiguration()
@@ -57,7 +56,7 @@ public class PayPalImplementation {
                 .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
                 .clientId(clientKey);
 
-        return isLiveEnvironment?configLive:configSand;
+        return isLiveEnvironment ? configLive : configSand;
 
     }
 
@@ -65,7 +64,7 @@ public class PayPalImplementation {
     private void initPaypal(boolean isLiveEnvironment) {
         //start datanapps.paypal service
 
-        if(activity==null){
+        if (activity == null) {
             Log.d("asd", "Context can not be null");
             return;
         }
@@ -77,10 +76,9 @@ public class PayPalImplementation {
     }
 
 
-
     public void processPayment(double amount, String itemDetail, int requestCode) {
 
-        if(activity==null){
+        if (activity == null) {
             Log.d("asd", "Context can not be null");
             return;
         }
@@ -96,19 +94,19 @@ public class PayPalImplementation {
 
 
     /*
-    *
-    * Get Access Token
-    * */
+     *
+     * Get Access Token
+     * */
 
     public void getAccessToken(String paypalOrderId) {
 
-        if(activity==null){
+        if (activity == null) {
             Log.d("asd", "Context can not be null");
             return;
         }
 
 
-        if(paypalOrderId==null){
+        if (paypalOrderId == null) {
             Log.d("asd", "Paypal order id can not be null");
             return;
         }
@@ -134,18 +132,18 @@ public class PayPalImplementation {
 
 
     /*
-    *
-    * Get transaction detail
-    * */
+     *
+     * Get transaction detail
+     * */
 
     public void getTransactionId(String paypalOrderId) {
 
-        if(activity==null){
+        if (activity == null) {
             Log.d("asd", "Context can not be null");
             return;
         }
 
-        if(paypalOrderId==null){
+        if (paypalOrderId == null) {
             Log.d("asd", "Paypal order id can not be null");
             return;
         }
@@ -161,7 +159,7 @@ public class PayPalImplementation {
                     APITransaction apiTransaction = (APITransaction) response;
 
 
-                    Log.d("asd", "Transaction Id : "+apiTransaction.getTransactions().get(0).getRelatedResources().get(0).getSale().getId());
+                    Log.d("asd", "Transaction Id : " + apiTransaction.getTransactions().get(0).getRelatedResources().get(0).getSale().getId());
                 }
             }
 
@@ -173,19 +171,19 @@ public class PayPalImplementation {
     }
 
 
-/*
-*
-* Call refund API
-* */
+    /*
+     *
+     * Call refund API
+     * */
     public void callRefundAPI(String transactionId) {
 
-        if(activity==null){
+        if (activity == null) {
             Log.d("asd", "Context can not be null");
             return;
         }
 
 
-        if(transactionId==null){
+        if (transactionId == null) {
             Log.d("asd", "Paypal order id can not be null");
             return;
         }
@@ -200,36 +198,46 @@ public class PayPalImplementation {
                 if (response instanceof APIRefund) {
                     Log.d("asd", "Transaction Id : ");
 
-                   // Bundle bundle =  new Bundle();
+                    // Bundle bundle =  new Bundle();
                     Intent intent = activity.getIntent();
-                    intent.putExtra(PaypalConfig.PAYPAL_REFUND_DATA, (APIRefund)response);
-
+                    intent.putExtra(PaypalConfig.PAYPAL_REFUND_DATA, (APIRefund) response);
                     activity.startActivityForResult(intent, PaypalConfig.PAYPAL_REFUND_REQUEST_CODE);
+                } else if (response instanceof APIRefunded) {
+                    Intent intent = activity.getIntent();
+                    intent.putExtra(PaypalConfig.PAYPAL_REFUND_DATA, (APIRefunded) response);
+                    //activity.onActivity(intent, PaypalConfig.PAYPAL_REFUND_REQUEST_CODE);
                 }
+
+
+
+
+
+                responseListener.onSuccess(response);
+
             }
 
             @Override
             public void onError(Call call, Throwable t) {
-                Log.d("asd", t.getMessage()+"");
+                Log.d("asd", t.getMessage() + "");
             }
         });
     }
 
 
     /*
-    *
-    * Call transaction and Refund API
-    * */
+     *
+     * Call transaction and Refund API
+     * */
 
     public void callTransactionDetailAndRefund(String paypalOrderId) {
 
-        if(activity==null){
+        if (activity == null) {
             Log.d("asd", "Context can not be null");
             return;
         }
 
 
-        if(paypalOrderId==null){
+        if (paypalOrderId == null) {
             Log.d("asd", "Paypal order id can not be null");
             return;
         }
@@ -243,7 +251,7 @@ public class PayPalImplementation {
             public void onSuccess(Call call, Object response) {
                 if (response instanceof APITransaction) {
                     APITransaction apiTransaction = (APITransaction) response;
-                    Log.d("asd", "Transaction Id : "+apiTransaction.getTransactions().get(0).getRelatedResources().get(0).getSale().getId());
+                    Log.d("asd", "Transaction Id : " + apiTransaction.getTransactions().get(0).getRelatedResources().get(0).getSale().getId());
                     callRefundAPI(apiTransaction.getTransactions().get(0).getRelatedResources().get(0).getSale().getId());
 
                 }
@@ -251,14 +259,10 @@ public class PayPalImplementation {
 
             @Override
             public void onError(Call call, Throwable t) {
-                Log.d("asd", t.getMessage()+"");
+                Log.d("asd", t.getMessage() + "");
             }
         });
     }
-
-
-
-
 
 
 }

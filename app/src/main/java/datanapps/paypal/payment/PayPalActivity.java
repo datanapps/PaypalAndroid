@@ -16,15 +16,17 @@ import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import datanapps.paypal.R;
+import datanapps.paypal.ResponseListener;
 import datanapps.paypal.config.PaypalConfig;
-import datanapps.paypal.refund.PayPalImplementation;
+import datanapps.paypal.PayPalImplementation;
 import datanapps.paypal.refund.models.refund.APIRefund;
+import datanapps.paypal.refund.models.refund.APIRefunded;
 
 
-public class PayPalActivity extends AppCompatActivity {
+public class PayPalActivity extends AppCompatActivity implements ResponseListener {
 
 
-    private String paypalOrderId = "PAY-0M98948388006303TL5IIMUY";
+    private String paypalOrderId = "PAY-3WR1697469021512XL5II2DA"; //
     private TextView tvPaymentResponse;
     private TextView tvRefundResponse;
     private PayPalImplementation payPalImplementation;
@@ -40,7 +42,7 @@ public class PayPalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         payPalImplementation = new PayPalImplementation();
-        payPalImplementation.initialise(this, PaypalConfig.PAYPAL_CLIENT_ID, PaypalConfig.PAYPAL_CLIENT_SECRET, false);
+        payPalImplementation.initialise(this, PaypalConfig.PAYPAL_CLIENT_ID, PaypalConfig.PAYPAL_CLIENT_SECRET, false, this);
         initViewStuff();
 
     }
@@ -77,12 +79,7 @@ public class PayPalActivity extends AppCompatActivity {
                 parsePaymentResponse(confirmation);
             } else if (resultCode == Activity.RESULT_CANCELED)
                 Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
-        } else if (requestCode == PaypalConfig.PAYPAL_REFUND_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                APIRefund apiRefund = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-                parseRefundResponse(apiRefund);
-            } else if (resultCode == Activity.RESULT_CANCELED)
-                Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
+
         } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID)
             Toast.makeText(this, "Invalid", Toast.LENGTH_SHORT).show();
     }
@@ -105,11 +102,43 @@ public class PayPalActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onSuccess(Object result) {
+                if(result instanceof APIRefund){
+                    APIRefund apiRefund = (APIRefund)result;
+                    parseRefundResponse(apiRefund);
+                }
+                else if(result instanceof APIRefunded){
+                    APIRefunded apiRefund = (APIRefunded)result;
+                    parseRefundResponseError(apiRefund);
+
+
+            } else
+                Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onError(Throwable t) {
+
+    }
+
     private void parseRefundResponse(APIRefund apiRefund) {
         if (apiRefund != null) {
             try {
 
                 tvRefundResponse.setText("Refunded");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void parseRefundResponseError(APIRefunded apiRefunded) {
+        if (apiRefunded != null) {
+            try {
+
+                tvRefundResponse.setText(apiRefunded.getName()+"\n\n\n"+apiRefunded.getMessage());
 
             } catch (Exception e) {
                 e.printStackTrace();

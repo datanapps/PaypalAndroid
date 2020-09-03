@@ -1,16 +1,13 @@
 
 package datanapps.paypal.refund.models.refund;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-public class APIRefund implements Parcelable {
+public class APIRefund implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -137,53 +134,5 @@ public class APIRefund implements Parcelable {
     }
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeString(this.createTime);
-        dest.writeString(this.updateTime);
-        dest.writeString(this.state);
-        dest.writeParcelable(this.amount, flags);
-        dest.writeParcelable(this.refundFromTransactionFee, flags);
-        dest.writeParcelable(this.totalRefundedAmount, flags);
-        dest.writeParcelable(this.refundFromReceivedAmount, flags);
-        dest.writeString(this.saleId);
-        dest.writeString(this.parentPayment);
-        dest.writeList(this.links);
-    }
-
-    public APIRefund() {
-    }
-
-    protected APIRefund(Parcel in) {
-        this.id = in.readString();
-        this.createTime = in.readString();
-        this.updateTime = in.readString();
-        this.state = in.readString();
-        this.amount = in.readParcelable(Amount.class.getClassLoader());
-        this.refundFromTransactionFee = in.readParcelable(RefundFromTransactionFee.class.getClassLoader());
-        this.totalRefundedAmount = in.readParcelable(TotalRefundedAmount.class.getClassLoader());
-        this.refundFromReceivedAmount = in.readParcelable(RefundFromReceivedAmount.class.getClassLoader());
-        this.saleId = in.readString();
-        this.parentPayment = in.readString();
-        this.links = new ArrayList<Link>();
-        in.readList(this.links, Link.class.getClassLoader());
-    }
-
-    public static final Creator<APIRefund> CREATOR = new Creator<APIRefund>() {
-        @Override
-        public APIRefund createFromParcel(Parcel source) {
-            return new APIRefund(source);
-        }
-
-        @Override
-        public APIRefund[] newArray(int size) {
-            return new APIRefund[size];
-        }
-    };
 }

@@ -1,13 +1,10 @@
 
 package datanapps.paypal.refund.models.refund;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RefundFromReceivedAmount implements Parcelable {
+public class RefundFromReceivedAmount {
 
     @SerializedName("currency")
     @Expose
@@ -32,34 +29,4 @@ public class RefundFromReceivedAmount implements Parcelable {
         this.value = value;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.currency);
-        dest.writeString(this.value);
-    }
-
-    public RefundFromReceivedAmount() {
-    }
-
-    protected RefundFromReceivedAmount(Parcel in) {
-        this.currency = in.readString();
-        this.value = in.readString();
-    }
-
-    public static final Creator<RefundFromReceivedAmount> CREATOR = new Creator<RefundFromReceivedAmount>() {
-        @Override
-        public RefundFromReceivedAmount createFromParcel(Parcel source) {
-            return new RefundFromReceivedAmount(source);
-        }
-
-        @Override
-        public RefundFromReceivedAmount[] newArray(int size) {
-            return new RefundFromReceivedAmount[size];
-        }
-    };
 }

@@ -3,7 +3,9 @@ package datanapps.paypal.refund.models.refund;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class APIRefunded {
+import java.io.Serializable;
+
+public class APIRefunded implements Serializable {
 
     @SerializedName("name")
     @Expose

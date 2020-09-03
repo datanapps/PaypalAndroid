@@ -29,7 +29,7 @@ public interface PayPalAPIServices {
 
 
     @Headers({"Content-Type: application/json"})
-    @POST("v1/payments/sale/{transaction_id}/datanapps.paypaldemo.refund") //PAY-6G391285C17409004L4OYRLQ
+    @POST("v1/payments/sale/{transaction_id}/refund") //PAY-6G391285C17409004L4OYRLQ
     Call<APIRefund> callRefundAPI(@Path("transaction_id") String transactionId);
 
 
